@@ -12,7 +12,7 @@ if __name__ == "__main__":
     spark = SparkSession.builder \
                 .appName("ml_datasource_daily") \
                 .master("local[*]") \
-                .config('spark.submit.pyFiles', '/work/dev/settings/xsetting.py') \
+                .config('spark.submit.pyFiles', 'file:///work/dev/stock/settings/xsetting.py') \
                 .getOrCreate()
     sc = spark.sparkContext
     pro = ts.pro_api(xsetting.tosharekey())
@@ -24,10 +24,11 @@ if __name__ == "__main__":
     data_list = spark.read.format("json").load(data_list_path)
     
     def getdailydata(item): 
-        if item.ts_code=='600105.SH' or item.ts_code=='600999.SH':
+        #if (item.ts_code=='600105.SH' or item.ts_code=='600999.SH'):
+        #if (item.ts_code=='600105.SH' or item.ts_code=='600999.SH') or True:
             #xsetting.deletefile(sc,daily_path+item.ts_code)
-            print(item.ts_code)
-            for _year in range(2010,2022):
+            start_year = int(item.list_date[0:4])+1
+            for _year in range(start_year,2023):
                 data_list = pro.daily(
                         ts_code=item.ts_code,
                         start_date=str(_year)+'0101',
