@@ -7,7 +7,7 @@ import settings.xsetting as xsetting
 if __name__ == "__main__":
     spark = SparkSession.builder \
                 .appName("ml_datasource_list") \
-                .master("local[2]") \
+                .master("local[*]") \
                 .config('spark.submit.pyFiles', '/work/dev/settings/xsetting.py') \
                 .getOrCreate()
 
@@ -21,6 +21,7 @@ if __name__ == "__main__":
     savepath = xsetting.stock_basic_path()+'SH'
     #xsetting.deletefile(sc,savepath)
     data_spark.write.mode("overwrite").format("json").save(savepath)
+    print("ml_datasource_list Finished")
 
     
     
