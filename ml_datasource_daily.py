@@ -23,12 +23,13 @@ if __name__ == "__main__":
     data_list_path = xsetting.stock_basic_path()+'SH'
     data_list = spark.read.format("json").load(data_list_path)
     
-    def getdailydata(item): 
+    def getdailydata(item):  
         #if (item.ts_code=='600105.SH' or item.ts_code=='600999.SH'):
         #if (item.ts_code=='600105.SH' or item.ts_code=='600999.SH') or True:
             #xsetting.deletefile(sc,daily_path+item.ts_code)
             start_year = int(item.list_date[0:4])+1
             for _year in range(start_year,2023):
+                print(item.ts_code+" "+str(_year))
                 data_list = pro.daily(
                         ts_code=item.ts_code,
                         start_date=str(_year)+'0101',
