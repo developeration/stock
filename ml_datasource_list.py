@@ -8,7 +8,7 @@ if __name__ == "__main__":
     spark = SparkSession.builder \
                 .appName("ml_datasource_list") \
                 .master("local[*]") \
-                .config('spark.submit.pyFiles', '/work/dev/settings/xsetting.py') \
+                .config('spark.submit.pyFiles', '/work/dev/stock/settings/xsetting.py') \
                 .getOrCreate()
 
     #.master("yarn") \
