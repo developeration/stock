@@ -34,6 +34,8 @@ if __name__ == "__main__":
                         start_date=str(_year)+'0101',
                         end_date=str(_year)+'1231'
                     )
+                if data_list.count() == 0 :
+                    continue
                 values = data_list.values.tolist()
                 columns = data_list.columns.tolist() 
                 
