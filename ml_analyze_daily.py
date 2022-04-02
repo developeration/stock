@@ -14,7 +14,7 @@ if __name__ == "__main__":
     spark = SparkSession.builder \
                 .appName("ml_analyze_daily") \
                 .master("local[*]") \
-                .config('spark.submit.pyFiles', 'file:///work/dev/settings/xsetting.py') \
+                .config('spark.submit.pyFiles', 'file:///work/dev/stock/settings/xsetting.py') \
                 .getOrCreate()
     sc = spark.sparkContext
     pro = ts.pro_api(xsetting.tosharekey())
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     data_list = spark.read.format("json").load(data_list_path)
     listdata =  pd.DataFrame()
     def analyzedailydata(item): 
-        if item.ts_code=='600105.SH' or item.ts_code=='600999.SH':
+        #if item.ts_code=='600105.SH' or item.ts_code=='600999.SH':
             item_daily_path = daily_path+item.ts_code
             data_daily = spark.read.format("json").load(item_daily_path)
             #print(data_daily.count())
