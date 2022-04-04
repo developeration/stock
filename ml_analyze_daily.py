@@ -45,28 +45,30 @@ if __name__ == "__main__":
                 data_return_data_item.append(float(df.iloc[index+8].change))
                 data_return_data_item.append(float(df.iloc[index+9].change))
                 data_return_data.append(data_return_data_item)
+        
+            schema = StructType(
+                [
+                    StructField("ts_code", StringType(), True),
+                    StructField("trade_date", StringType(), True),
+                    StructField("c1", FloatType(), True),
+                    StructField("c2", FloatType(), True),
+                    StructField("c3", FloatType(), True),
+                    StructField("c4", FloatType(), True),
+                    StructField("c5", FloatType(), True),
+                    StructField("x1", FloatType(), True),
+                    StructField("x2", FloatType(), True),
+                    StructField("x3", FloatType(), True),
+                    StructField("x4", FloatType(), True),
+                    StructField("x5", FloatType(), True),
+                ]
+            ) 
+            data_spark = spark.createDataFrame(data_return_data, schema)
+            savepath = analyze_daily_path+filename
+            data_spark.write.mode("overwrite").format("json").save(savepath)
+            
         except Exception as e:
             print(e)
-        schema = StructType(
-            [
-                StructField("ts_code", StringType(), True),
-                StructField("trade_date", StringType(), True),
-                StructField("c1", FloatType(), True),
-                StructField("c2", FloatType(), True),
-                StructField("c3", FloatType(), True),
-                StructField("c4", FloatType(), True),
-                StructField("c5", FloatType(), True),
-                StructField("x1", FloatType(), True),
-                StructField("x2", FloatType(), True),
-                StructField("x3", FloatType(), True),
-                StructField("x4", FloatType(), True),
-                StructField("x5", FloatType(), True),
-            ]
-        ) 
-        data_spark = spark.createDataFrame(data_return_data, schema)
-        savepath = analyze_daily_path+filename
-        data_spark.write.mode("overwrite").format("json").save(savepath)
-        
+
         return "~"
     x = df.applymap(analyzesplit)
     #print(x)
