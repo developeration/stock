@@ -8,6 +8,7 @@ import tushare  as ts
 import settings.xsetting as xsetting
 import os
 import pandas as pd
+from pyspark.sql.types import  *
 
 if __name__ == "__main__": 
 
@@ -16,33 +17,46 @@ if __name__ == "__main__":
                 .master("local[*]") \
                 .config('spark.submit.pyFiles', 'file:///work/dev/stock/settings/xsetting.py') \
                 .getOrCreate()
-    sc = spark.sparkContext
-    pro = ts.pro_api(xsetting.tosharekey())
-
+    sc = spark.sparkContext 
     stock_basic_path = xsetting.stock_basic_path()
     daily_path = xsetting.daily_path()
     analyze_daily_path = xsetting.analyze_daily_path()
 
-    data_list_path = xsetting.stock_basic_path()+'SH'
-    print(data_list_path)
-    data_list = spark.read.format("json").load(data_list_path)
-    listdata =  pd.DataFrame()
-    def analyzedailydata(item): 
-        #if item.ts_code=='600105.SH' or item.ts_code=='600999.SH':
-            item_daily_path = daily_path+item.ts_code
-            data_daily = spark.read.format("json").load(item_daily_path)
-            #print(data_daily.count())
-            #data_daily.mapInPandas()
-            return data_daily.toPandas()
-
-    for item in data_list.collect():
-        x = analyzedailydata(item)
-        listdata=pd.concat([listdata,x])
-    
-    values = listdata.values.tolist()
-    columns = listdata.columns.tolist() 
-    data_spark = spark.createDataFrame(values, columns)
-
-    data_spark.show()
-    
-    
+    files_list = os.listdir("/work/dev/stock/datasource/daily/")
+    df = pd.DataFrame(files_list)
+    def xxx(filename):
+        filepath = daily_path+filename
+        rf = spark.read.format("json").load(filepath)
+        df = rf.toPandas().sort_values(by=['trade_date'])
+        dfcount = df.shape[0]
+        data_return_data = list()
+        try:
+            for index in range(0,dfcount-5): 
+                data_return_data_item = list()
+                data_return_data_item.append(df.iloc[index].ts_code) 
+                data_return_data_item.append(df.iloc[index].trade_date) 
+                data_return_data_item.append(float(df.iloc[index].change))
+                data_return_data_item.append(float(df.iloc[index+1].change))
+                data_return_data_item.append(float(df.iloc[index+2].change))
+                data_return_data_item.append(float(df.iloc[index+3].change))
+                data_return_data_item.append(float(df.iloc[index+4].change))
+                data_return_data.append(data_return_data_item)
+        except Exception as e:
+            print(e)
+        schema = StructType(
+            [
+                StructField("ts_code", StringType(), True),
+                StructField("trade_date", StringType(), True),
+                StructField("c1", FloatType(), True),
+                StructField("c2", FloatType(), True),
+                StructField("c3", FloatType(), True),
+                StructField("c4", FloatType(), True),
+                StructField("c5", FloatType(), True),
+            ]
+        ) 
+        data_spark = spark.createDataFrame(data_return_data, schema)
+        savepath = analyze_daily_path+filename
+        data_spark.write.mode("append").format("json").save(savepath)
+        return "~"
+    x = df.applymap(xxx)
+    #print(x)
