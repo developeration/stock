@@ -20,7 +20,7 @@ if __name__ == "__main__":
     stock_basic_path = xsetting.stock_basic_path()
     daily_path = xsetting.daily_path()
 
-    data_list_path = xsetting.stock_basic_path()+'SH'
+    data_list_path = xsetting.stock_basic_path()+'MAIN'
     data_list = spark.read.format("json").load(data_list_path)
     
     def getdailydata(item):  
@@ -48,6 +48,6 @@ if __name__ == "__main__":
                     print(e)
     for item in data_list.collect():
         getdailydata(item)
-        time.sleep(0.01)
+        time.sleep(0.005)
     
     

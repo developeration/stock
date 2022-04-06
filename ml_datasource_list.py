@@ -18,7 +18,7 @@ if __name__ == "__main__":
     values = data_list.values.tolist()
     columns = data_list.columns.tolist() 
     data_spark = spark.createDataFrame(values, columns)
-    savepath = xsetting.stock_basic_path()+'SH'
+    savepath = xsetting.stock_basic_path()+'MAIN'
     #xsetting.deletefile(sc,savepath)
     data_spark.write.mode("overwrite").format("json").save(savepath)
     print("ml_datasource_list Finished")
