@@ -34,16 +34,25 @@ if __name__ == "__main__":
                 data_return_data_item = list()
                 data_return_data_item.append(df.iloc[index].ts_code) 
                 data_return_data_item.append(df.iloc[index].trade_date) 
-                data_return_data_item.append(float(df.iloc[index].change))
-                data_return_data_item.append(float(df.iloc[index+1].change))
-                data_return_data_item.append(float(df.iloc[index+2].change))
-                data_return_data_item.append(float(df.iloc[index+3].change))
-                data_return_data_item.append(float(df.iloc[index+4].change))
-                data_return_data_item.append(float(df.iloc[index+5].change))
-                data_return_data_item.append(float(df.iloc[index+6].change))
-                data_return_data_item.append(float(df.iloc[index+7].change))
-                data_return_data_item.append(float(df.iloc[index+8].change))
-                data_return_data_item.append(float(df.iloc[index+9].change))
+                pct_chg1 = float(df.iloc[index].pct_chg)
+                pct_chg2 = float(df.iloc[index+1].pct_chg)
+                pct_chg3 = float(df.iloc[index+2].pct_chg)
+                pct_chg4 = float(df.iloc[index+3].pct_chg)
+                pct_chg5 = float(df.iloc[index+4].pct_chg)
+                data_return_data_item.append(pct_chg1)
+                data_return_data_item.append(pct_chg2)
+                data_return_data_item.append(pct_chg3)
+                data_return_data_item.append(pct_chg4)
+                data_return_data_item.append(pct_chg5)
+
+                
+                data_return_data_item.append(1.0*(1+pct_chg1)*(1+pct_chg2)*(1+pct_chg3)*(1+pct_chg4)*(1+pct_chg5)-1.0)
+
+                data_return_data_item.append(float(df.iloc[index+5].pct_chg))
+                data_return_data_item.append(float(df.iloc[index+6].pct_chg))
+                data_return_data_item.append(float(df.iloc[index+7].pct_chg))
+                data_return_data_item.append(float(df.iloc[index+8].pct_chg))
+                data_return_data_item.append(float(df.iloc[index+9].pct_chg))
                 data_return_data.append(data_return_data_item)
         
             schema = StructType(
@@ -55,6 +64,7 @@ if __name__ == "__main__":
                     StructField("c3", FloatType(), True),
                     StructField("c4", FloatType(), True),
                     StructField("c5", FloatType(), True),
+                    StructField("ct", FloatType(), True),
                     StructField("x1", FloatType(), True),
                     StructField("x2", FloatType(), True),
                     StructField("x3", FloatType(), True),
