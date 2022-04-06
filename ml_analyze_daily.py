@@ -7,7 +7,7 @@ import settings.xsetting as xsetting
 import os
 import pandas as pd
 from pyspark.sql.types import  *
-
+from IPython.display import display
 if __name__ == "__main__": 
 
     spark = SparkSession.builder \
@@ -48,11 +48,20 @@ if __name__ == "__main__":
                 
                 data_return_data_item.append(1.0*(1+pct_chg1)*(1+pct_chg2)*(1+pct_chg3)*(1+pct_chg4)*(1+pct_chg5)-1.0)
 
-                data_return_data_item.append(float(df.iloc[index+5].pct_chg))
-                data_return_data_item.append(float(df.iloc[index+6].pct_chg))
-                data_return_data_item.append(float(df.iloc[index+7].pct_chg))
-                data_return_data_item.append(float(df.iloc[index+8].pct_chg))
-                data_return_data_item.append(float(df.iloc[index+9].pct_chg))
+                pct_chg6 = float(df.iloc[index+5].pct_chg)
+                pct_chg7 = float(df.iloc[index+5].pct_chg)
+                pct_chg8 = float(df.iloc[index+5].pct_chg)
+                pct_chg9 = float(df.iloc[index+5].pct_chg)
+                pct_chg10 = float(df.iloc[index+5].pct_chg)
+
+                data_return_data_item.append(pct_chg6)
+                data_return_data_item.append(pct_chg7)
+                data_return_data_item.append(pct_chg8)
+                data_return_data_item.append(pct_chg9)
+                data_return_data_item.append(pct_chg10)
+
+                data_return_data_item.append(1.0*(1+pct_chg6)*(1+pct_chg7)*(1+pct_chg8)*(1+pct_chg9)*(1+pct_chg10)-1.0)
+
                 data_return_data.append(data_return_data_item)
         
             schema = StructType(
@@ -70,6 +79,7 @@ if __name__ == "__main__":
                     StructField("x3", FloatType(), True),
                     StructField("x4", FloatType(), True),
                     StructField("x5", FloatType(), True),
+                    StructField("xt", FloatType(), True),
                 ]
             ) 
             data_spark = spark.createDataFrame(data_return_data, schema)
