@@ -29,7 +29,7 @@ def mssqldailydata(filename):
     rf = spark.read.format("json").load(filepath)
     print(filename)
     df = rf.toPandas()
-    conn = pymssql.connect("192.168.80.100", "sa", passwd, "AIDB")
+    conn = pymssql.connect("localhost", "sa", passwd, "AIDB")
     with conn.cursor(as_dict=True) as cursor:
 
         _RowCount = df.shape[0]
