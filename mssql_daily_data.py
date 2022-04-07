@@ -18,7 +18,7 @@ spark = SparkSession.builder \
                 .config('spark.submit.pyFiles', 'file:///work/dev/stock/settings/xsetting.py') \
                 .getOrCreate()
 sc = spark.sparkContext 
-filepath='file:///work/dev/stock/datasource/daily/000001.SZ'
+#filepath='file:///work/dev/stock/datasource/daily/000001.SZ'
 #rf = spark.read.format("json").load(filepath)
 #df = rf.toPandas()
 
@@ -76,6 +76,6 @@ def mssqldailydata(filename):
         conn.commit() 
     conn.close()
 
-files_list = os.listdir("/work/dev/stock/datasource/daily/")
+files_list = os.listdir(xsetting.daily_path())
 df = pd.DataFrame(files_list)
 x = df.applymap(mssqldailydata)
