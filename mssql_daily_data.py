@@ -23,13 +23,13 @@ filepath='file:///work/dev/stock/datasource/daily/000001.SZ'
 #df = rf.toPandas()
 
 daily_path=daily_path = xsetting.daily_path()
-
+passwd = xsetting.mssql_passwd()
 def mssqldailydata(filename):
     filepath = daily_path+filename
     rf = spark.read.format("json").load(filepath)
     print(filename)
     df = rf.toPandas()
-    conn = pymssql.connect("192.168.80.100", "sa", "Password01!", "AIDB")
+    conn = pymssql.connect("192.168.80.100", "sa", passwd, "AIDB")
     with conn.cursor(as_dict=True) as cursor:
 
         _RowCount = df.shape[0]
