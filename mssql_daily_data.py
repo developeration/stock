@@ -76,6 +76,6 @@ def mssqldailydata(filename):
         conn.commit() 
     conn.close()
 
-files_list = os.listdir(xsetting.daily_path())
+files_list = os.listdir("/work/dev/stock/datasource/daily/")
 df = pd.DataFrame(files_list)
 x = df.applymap(mssqldailydata)
