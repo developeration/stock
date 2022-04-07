@@ -63,8 +63,8 @@ if __name__ == "__main__":
             print(e)
 
         return "~"
-#     print("东风汽车 600006")
-#     analyzesplit("600006.SH")
+    print("东风汽车 600006")
+    analyzesplit("600006.SH")
 #     print("国发股份 600538")
 #     analyzesplit("600538.SH")
 #     print("山鹰国际 600567")
@@ -77,5 +77,5 @@ if __name__ == "__main__":
 #     analyzesplit("600999.SH")
 #     print("恒瑞医药 600276")
 #     analyzesplit("600276.SH")
-    print("平安银行 000001")
-    analyzesplit("000001.SZ")
+    # print("平安银行 000001")
+    # analyzesplit("000001.SZ")
