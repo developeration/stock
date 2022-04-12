@@ -1,3 +1,4 @@
+from pyspark import SparkConf
 from _Setting import StockSetting
 import tushare  as ts
 import numpy as np
@@ -6,20 +7,24 @@ from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, DoubleType
 import json
 
-#spark-submit  --master yarn --py-files ./_Setting.py --deploy-mode cluster ./_Spark_makeSource_Daily.py
+#spark-submit  --master yarn --py-files ./_Setting.py --deploy-mode cluster --conf "spark.default.parallelism=15" ./_Spark_makeSource_Daily.py
 #nohup spark-submit  --master yarn --py-files ./_Setting.py --deploy-mode cluster ./_Spark_makeSource_Daily.py > spark.log &
 
 if __name__ == "__main__":
     settings = StockSetting()
     spark = SparkSession.builder \
         .appName("_Spark_makeSource") \
-        .master("local[*]") \
+        .master("yarn") \
         .config('spark.submit.pyFiles', '/work/dev/stock/_Setting.py') \
         .getOrCreate() 
         # .appName("_Spark_makeSource") \
         # .getOrCreate() 
+
+    conf = SparkConf()
+    conf.set("spark.default.parallelism","15")
     sc = spark.sparkContext
     pro = ts.pro_api(settings.tushareKey)
+
 
     data_local = pro.stock_basic(exchange='', list_status='L',market='主板')
     data_hadop = spark.createDataFrame(data_local)
@@ -34,7 +39,7 @@ if __name__ == "__main__":
         try:
             savepath = settings.datasource_daily_path+item.ts_code
             if(settings.file_exists(sc,savepath) == False):
-                #print(item.ts_code)
+                print("daily",item.ts_code)
                 data_daily_local = pro.daily(  ts_code=item.ts_code )
                 if data_daily_local.empty :
                     return
@@ -47,7 +52,7 @@ if __name__ == "__main__":
         try:
             savepath = settings.datasource_daily_basic_path+item.ts_code
             if(settings.file_exists(sc,savepath) == False):
-                #print(item.ts_code)
+                print("daily_basic",item.ts_code)
                 data_daily_local = pro.daily_basic(  ts_code=item.ts_code )
                 if data_daily_local.empty :
                     return
@@ -83,7 +88,7 @@ if __name__ == "__main__":
         try:
             savepath = settings.datasource_moneyflow_path+item.ts_code
             if(settings.file_exists(sc,savepath) == False):
-                #print(item.ts_code)
+                print("moneyflow",item.ts_code)
                 data_daily_local = pro.moneyflow(ts_code=item.ts_code )
                 if data_daily_local.empty :
                     return
