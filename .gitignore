@@ -125,8 +125,13 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
-# Pyre type checker
 .pyre/
 settings/
 datasource/
 _Setting.py
+
+temp/
+datasource/
+analyze/
+Train/_Setting.py
+
