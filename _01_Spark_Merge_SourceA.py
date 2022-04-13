@@ -1,0 +1,52 @@
+from pyspark import SparkConf
+from _Setting import StockSetting
+import tushare  as ts
+import numpy as np
+import pandas as pd
+from pyspark.sql import SparkSession
+from pyspark.sql.types import StructType, StructField, StringType, DoubleType
+import json
+
+#spark-submit  --master yarn --py-files ./_Setting.py --deploy-mode cluster --conf "spark.default.parallelism=15" ./_01_Spark_Merge_SourceA.py
+#nohup spark-submit  --master yarn --py-files ./_Setting.py --deploy-mode cluster ./_Spark_makeSource_Daily.py > spark.log &
+
+if __name__ == "__main__":
+    settings = StockSetting()
+    spark = SparkSession.builder \
+        .appName("_01_Spark_Merge_SourceA") \
+        .getOrCreate()  
+
+    pro = ts.pro_api(settings.tushareKey)
+    conf = SparkConf()
+    conf.set("spark.default.parallelism","15")
+          
+    def getdailydata(item):
+        dailypath = settings.datasource_daily_path+item.ts_code
+        daily_data = spark.read.format("json").load(dailypath)
+        return daily_data
+
+    stocklist_path = settings.datasource_path+"stock_basic_main"
+    data_base_main = spark.read.format("json").load(stocklist_path)
+
+    savepath = settings.data_all_path+"daily_data_ALL"
+    #daily_data = None 
+    stock_basic_main_list = data_base_main.collect()
+    index = 0
+    for item in stock_basic_main_list:
+        index = index+1
+        if(index % 50 == 49 ):
+            print(index)
+        try:
+            return_value = getdailydata(item)
+            # if(daily_data == None):
+            #     daily_data = return_value
+            # else :
+            #     daily_data = daily_data.unionAll(return_value)
+
+            return_value.write.mode("append").format("json").save(savepath)
+        except Exception as ex:
+            print(ex)
+ 
+
+
+    print("Finished")

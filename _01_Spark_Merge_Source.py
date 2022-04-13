@@ -7,7 +7,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, DoubleType
 import json
 
-#spark-submit  --master yarn --py-files ./_Setting.py --deploy-mode cluster --conf "spark.default.parallelism=15" ./_Spark_makeSource_Daily.py
+#spark-submit  --master yarn --py-files ./_Setting.py --deploy-mode cluster --conf "spark.default.parallelism=15" ./_01_Spark_Merge_Source.py
 #nohup spark-submit  --master yarn --py-files ./_Setting.py --deploy-mode cluster ./_Spark_makeSource_Daily.py > spark.log &
 
 if __name__ == "__main__":
