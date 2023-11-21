@@ -1,6 +1,5 @@
 import cv2
-#import tkinter as tk
-#import PIL as pil
+
 from tkinter import *
 from PIL import Image, ImageTk
 import time
@@ -19,7 +18,7 @@ capture = cv2.VideoCapture(0)
 canvas = Canvas(window,bg = 'white',width = image_width,height = image_height )
 selection_start = None
 selection_end = None
-
+pilImage = None
 
 
 def start_selection(event):
@@ -32,22 +31,17 @@ def end_selection(event):
     selection_end = (event.x, event.y)
 
 
-
-
-# 绑定鼠标按下事件
 canvas.bind("<Button-1>", start_selection)
-# 绑定鼠标释放事件
 canvas.bind("<ButtonRelease-1>", end_selection)
 
 
 image_start = None
 def btn_start_callback():
-    global selection_start, selection_end,image_start
+    global selection_start, selection_end,image_start,pilImage
     if selection_start and selection_end:
         x1, y1 = selection_start
         x2, y2 = selection_end
-        canvas.postscript( file="C:\\Work\\HideDesktop\\canvas_start.ps", colormode="color")
-        image = Image.open("C:\\Work\\HideDesktop\\canvas_start.ps")
+        image = pilImage.copy()
         image.load()
         image = image.resize((image_width,image_height))
         image_start = image.crop((x1, y1,x2,y2))
@@ -57,6 +51,8 @@ def btn_start_callback():
 
 
 def btn_test_callback():
+    # global pilImage
+    # _image = pilImage.copy()        
     global image_start
     image_start=None
     lab_information['text']='End.'
@@ -103,8 +99,9 @@ while(True):
         
 
         if selection_start and selection_end and image_start  :
-            canvas.postscript( file="C:\\Work\\HideDesktop\\canvas_process.ps", colormode="color")
-            image = Image.open("C:\\Work\\HideDesktop\\canvas_process.ps")
+            #canvas.postscript( file="C:\\Work\\HideDesktop\\canvas_process.ps", colormode="color")
+            #image = Image.open("C:\\Work\\HideDesktop\\canvas_process.ps")
+            image = pilImage.copy()
             image.load()
             image = image.resize((image_width,image_height))
             x1, y1 = selection_start
