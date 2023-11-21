@@ -135,3 +135,6 @@ datasource/
 analyze/
 Train/_Setting.py
 
+/Stock-20230803.bak
+/stock-20230816.bak
+/.vs
